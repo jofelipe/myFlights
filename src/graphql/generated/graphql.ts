@@ -52,6 +52,7 @@ export type Airplane = Node & {
   smallName: Scalars['String'];
   /** System stage field */
   stage: Stage;
+  unique: Scalars['Int'];
   /** The time the document was updated */
   updatedAt: Scalars['DateTime'];
   /** User that last updated this document */
@@ -126,6 +127,7 @@ export type AirplaneCreateInput = {
   manufacturer?: Maybe<ManufacturerCreateOneInlineInput>;
   name: Scalars['String'];
   smallName: Scalars['String'];
+  unique: Scalars['Int'];
   updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
@@ -255,6 +257,21 @@ export type AirplaneManyWhereInput = {
   smallName_not_starts_with?: Maybe<Scalars['String']>;
   /** All values starting with the given string. */
   smallName_starts_with?: Maybe<Scalars['String']>;
+  unique?: Maybe<Scalars['Int']>;
+  /** All values greater than the given value. */
+  unique_gt?: Maybe<Scalars['Int']>;
+  /** All values greater than or equal the given value. */
+  unique_gte?: Maybe<Scalars['Int']>;
+  /** All values that are contained in given list. */
+  unique_in?: Maybe<Array<Scalars['Int']>>;
+  /** All values less than the given value. */
+  unique_lt?: Maybe<Scalars['Int']>;
+  /** All values less than or equal the given value. */
+  unique_lte?: Maybe<Scalars['Int']>;
+  /** All values that are not equal to given value. */
+  unique_not?: Maybe<Scalars['Int']>;
+  /** All values that are not contained in given list. */
+  unique_not_in?: Maybe<Array<Scalars['Int']>>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   updatedAt_gt?: Maybe<Scalars['DateTime']>;
@@ -284,6 +301,8 @@ export enum AirplaneOrderByInput {
   PublishedAtDesc = 'publishedAt_DESC',
   SmallNameAsc = 'smallName_ASC',
   SmallNameDesc = 'smallName_DESC',
+  UniqueAsc = 'unique_ASC',
+  UniqueDesc = 'unique_DESC',
   UpdatedAtAsc = 'updatedAt_ASC',
   UpdatedAtDesc = 'updatedAt_DESC'
 }
@@ -293,6 +312,7 @@ export type AirplaneUpdateInput = {
   manufacturer?: Maybe<ManufacturerUpdateOneInlineInput>;
   name?: Maybe<Scalars['String']>;
   smallName?: Maybe<Scalars['String']>;
+  unique?: Maybe<Scalars['Int']>;
 };
 
 export type AirplaneUpdateManyInlineInput = {
@@ -463,6 +483,21 @@ export type AirplaneWhereInput = {
   smallName_not_starts_with?: Maybe<Scalars['String']>;
   /** All values starting with the given string. */
   smallName_starts_with?: Maybe<Scalars['String']>;
+  unique?: Maybe<Scalars['Int']>;
+  /** All values greater than the given value. */
+  unique_gt?: Maybe<Scalars['Int']>;
+  /** All values greater than or equal the given value. */
+  unique_gte?: Maybe<Scalars['Int']>;
+  /** All values that are contained in given list. */
+  unique_in?: Maybe<Array<Scalars['Int']>>;
+  /** All values less than the given value. */
+  unique_lt?: Maybe<Scalars['Int']>;
+  /** All values less than or equal the given value. */
+  unique_lte?: Maybe<Scalars['Int']>;
+  /** All values that are not equal to given value. */
+  unique_not?: Maybe<Scalars['Int']>;
+  /** All values that are not contained in given list. */
+  unique_not_in?: Maybe<Array<Scalars['Int']>>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   updatedAt_gt?: Maybe<Scalars['DateTime']>;
@@ -486,6 +521,7 @@ export type AirplaneWhereUniqueInput = {
   id?: Maybe<Scalars['ID']>;
   name?: Maybe<Scalars['String']>;
   smallName?: Maybe<Scalars['String']>;
+  unique?: Maybe<Scalars['Int']>;
 };
 
 export type Airport = Node & {
@@ -6469,3 +6505,15 @@ export type GetCompanyByUniqueQueryVariables = Exact<{
 
 
 export type GetCompanyByUniqueQuery = { __typename?: 'Query', company?: { __typename?: 'Company', name: string, code: string, country: Country } | null | undefined };
+
+export type GetFlightsAirplanesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetFlightsAirplanesQuery = { __typename?: 'Query', flights: Array<{ __typename?: 'Flight', airplane?: { __typename?: 'Airplane', unique: number } | null | undefined }> };
+
+export type GetAirplaneByUniqueQueryVariables = Exact<{
+  unique: Scalars['Int'];
+}>;
+
+
+export type GetAirplaneByUniqueQuery = { __typename?: 'Query', airplane?: { __typename?: 'Airplane', unique: number, name: string, smallName: string, manufacturer?: { __typename?: 'Manufacturer', name: string } | null | undefined } | null | undefined };
