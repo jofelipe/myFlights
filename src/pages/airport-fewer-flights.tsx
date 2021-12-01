@@ -45,7 +45,7 @@ export default function AirportFewerFlights({
   );
 
   return (
-    <Content title="Aeroporto com menos voos">
+    <Content title="Aeroporto menos frequentado">
       {!data ? (
         <p>Carregando...</p>
       ) : (

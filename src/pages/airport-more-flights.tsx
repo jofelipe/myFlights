@@ -50,7 +50,7 @@ export default function AirportMoreFlights({
   );
 
   return (
-    <Content title="Aeroporto com mais voos">
+    <Content title="Aeroporto mais frequentado">
       {!data ? (
         <p>Carregando...</p>
       ) : (

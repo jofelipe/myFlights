@@ -136,3 +136,26 @@ export const GET_COMPANY_BY_UNIQUE = gql`
     }
   }
 `;
+
+export const GET_FLIGHTS_AIRPLANES = gql`
+  query getFlightsAirplanes {
+    flights {
+      airplane {
+        unique
+      }
+    }
+  }
+`;
+
+export const GET_AIRPLANE_BY_UNIQUE = gql`
+  query getAirplaneByUnique($unique: Int!) {
+    airplane(where: { unique: $unique }) {
+      unique
+      name
+      smallName
+      manufacturer {
+        name
+      }
+    }
+  }
+`;
