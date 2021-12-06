@@ -1,11 +1,13 @@
-import { GetStaticProps } from 'next';
 import useSWR from 'swr';
-
 import client from 'graphql/client';
+import calcFewer from 'utils/calcFewer';
 
-import { GET_FLIGHTS_AIRPORTS } from 'graphql/queries';
+import { GetStaticProps } from 'next';
 import { Airport, GetFlightsAirportsQuery } from 'graphql/generated/graphql';
-import { ObjectWithNumbers } from 'types';
+import { GET_FLIGHTS_AIRPORTS } from 'graphql/queries';
+import { fetcher } from 'utils/swr';
+import { useEffect } from 'react';
+import { useRedirect } from 'hooks/redirect';
 
 import Content from 'components/Content';
 
@@ -18,6 +20,8 @@ type AirportProps = {
 export default function AirportFewerFlights({
   flights
 }: GetFlightsAirportsQuery) {
+  const { redirect } = useRedirect();
+
   const allAirports: number[] = [];
 
   flights.forEach((flight) => {
@@ -25,24 +29,19 @@ export default function AirportFewerFlights({
     allAirports.push(flight.arrivalAirport?.unique || 0);
   });
 
-  const reduced: ObjectWithNumbers = allAirports.reduce(
-    (acc: ObjectWithNumbers, val) => ({ ...acc, [val]: (acc[val] || 0) + 1 }),
-    {}
-  );
-  const flightsNumber = Math.min(...Object.values(reduced));
-  const airportUnique = Object.keys(reduced).find(
-    (el) => reduced[el] === flightsNumber
-  );
-
-  const fetcher = (url: string) => fetch(url).then((res) => res.json());
+  const { flightsNumber, unique } = calcFewer(allAirports);
 
   const { data }: AirportProps = useSWR(
     '/api/airport?' +
       new URLSearchParams({
-        unique: String(airportUnique)
+        unique
       }),
     fetcher
   );
+
+  useEffect(() => {
+    redirect();
+  }, [redirect]);
 
   return (
     <Content title="Aeroporto menos frequentado">

@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-
 import ReactCountryFlag from 'react-country-flag';
 import countries from 'i18n-iso-countries';
 import pt from 'i18n-iso-countries/langs/pt.json';
+
+import { useEffect, useState } from 'react';
 
 type FlagProps = {
   code: string;

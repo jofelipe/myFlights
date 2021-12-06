@@ -1,9 +1,13 @@
 import useSWR from 'swr';
 import client from 'graphql/client';
+import calcMore from 'utils/calcMore';
 
 import { GetStaticProps } from 'next';
-import { GET_FLIGHTS_AIRPLANES } from 'graphql/queries';
 import { Airplane, GetFlightsAirplanesQuery } from 'graphql/generated/graphql';
+import { GET_FLIGHTS_AIRPLANES } from 'graphql/queries';
+import { fetcher } from 'utils/swr';
+import { useEffect } from 'react';
+import { useRedirect } from 'hooks/redirect';
 
 import Content from 'components/Content';
 
@@ -16,36 +20,27 @@ interface AirplaneProps {
 export default function AirplaneFewerFlights({
   flights
 }: GetFlightsAirplanesQuery) {
+  const { redirect } = useRedirect();
+
   const allAirplanes: number[] = [];
 
   flights.forEach((flight) => {
     allAirplanes.push(flight.airplane?.unique || 0);
   });
 
-  let flightsNumber = 1;
-  let m = 0;
-  let airplaneUnique;
-
-  for (let i = 0; i < allAirplanes.length; i++) {
-    for (let j = i; j < allAirplanes.length; j++) {
-      if (allAirplanes[i] == allAirplanes[j]) m++;
-      if (flightsNumber < m) {
-        flightsNumber = m;
-        airplaneUnique = allAirplanes[i];
-      }
-    }
-    m = 0;
-  }
-
-  const fetcher = (url: string) => fetch(url).then((res) => res.json());
+  const { flightsNumber, unique } = calcMore(allAirplanes);
 
   const { data }: AirplaneProps = useSWR(
     '/api/airplane?' +
       new URLSearchParams({
-        unique: String(airplaneUnique)
+        unique
       }),
     fetcher
   );
+
+  useEffect(() => {
+    redirect();
+  }, [redirect]);
 
   return (
     <Content title="Avião com mais voos">
@@ -53,7 +48,7 @@ export default function AirplaneFewerFlights({
         <p>Carregando...</p>
       ) : (
         <AirplaneTemplate
-          airplaneUnique={airplaneUnique || 0}
+          airplaneUnique={unique}
           data={data}
           flightsNumber={flightsNumber}
         />

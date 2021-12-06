@@ -1,10 +1,13 @@
 import useSWR from 'swr';
 import client from 'graphql/client';
+import calcFewer from 'utils/calcFewer';
 
 import { GetStaticProps } from 'next';
-import { GET_FLIGHTS_COMPANIES } from 'graphql/queries';
 import { Company, GetFlightsCompaniesQuery } from 'graphql/generated/graphql';
-import { ObjectWithNumbers } from 'types';
+import { GET_FLIGHTS_COMPANIES } from 'graphql/queries';
+import { fetcher } from 'utils/swr';
+import { useEffect } from 'react';
+import { useRedirect } from 'hooks/redirect';
 
 import Content from 'components/Content';
 
@@ -17,30 +20,27 @@ interface CompanyProps {
 export default function CompanyFewerFlights({
   flights
 }: GetFlightsCompaniesQuery) {
+  const { redirect } = useRedirect();
+
   const allCompanies: number[] = [];
 
   flights.forEach((flight) => {
     allCompanies.push(flight.company?.unique || 0);
   });
 
-  const reduced: ObjectWithNumbers = allCompanies.reduce(
-    (acc: ObjectWithNumbers, val) => ({ ...acc, [val]: (acc[val] || 0) + 1 }),
-    {}
-  );
-  const flightsNumber = Math.min(...Object.values(reduced));
-  const companyUnique = Object.keys(reduced).find(
-    (el) => reduced[el] === flightsNumber
-  );
-
-  const fetcher = (url: string) => fetch(url).then((res) => res.json());
+  const { flightsNumber, unique } = calcFewer(allCompanies);
 
   const { data }: CompanyProps = useSWR(
     '/api/company?' +
       new URLSearchParams({
-        unique: String(companyUnique)
+        unique
       }),
     fetcher
   );
+
+  useEffect(() => {
+    redirect();
+  }, [redirect]);
 
   return (
     <Content title="Companhia com menos voos">
@@ -48,7 +48,7 @@ export default function CompanyFewerFlights({
         <p>Carregando...</p>
       ) : (
         <CompanyTemplate
-          companyUnique={companyUnique || 0}
+          companyUnique={unique}
           data={data}
           flightsNumber={flightsNumber}
         />

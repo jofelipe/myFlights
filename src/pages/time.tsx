@@ -1,15 +1,18 @@
-import { GetStaticProps } from 'next';
-
 import client from 'graphql/client';
 
-import { GET_FLIGHTS_DURATION } from 'graphql/queries';
+import { GetStaticProps } from 'next';
 import { GetFlightsDurationQuery } from 'graphql/generated/graphql';
+import { GET_FLIGHTS_DURATION } from 'graphql/queries';
+import { useEffect } from 'react';
+import { useRedirect } from 'hooks/redirect';
 
 import Content from 'components/Content';
 
 import * as S from 'styles/numbers';
 
 export default function Time({ flights }: GetFlightsDurationQuery) {
+  const { redirect } = useRedirect();
+
   const durations = flights.map((flight) => flight.duration);
 
   const toSeconds = (str: string) => {
@@ -28,6 +31,10 @@ export default function Time({ flights }: GetFlightsDurationQuery) {
   const totalTime = toHours(totalDuration);
 
   const totalDays = parseInt(toHours(totalDuration)) / 24;
+
+  useEffect(() => {
+    redirect();
+  }, [redirect]);
 
   return (
     <Content title="Tempo total">

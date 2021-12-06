@@ -1,10 +1,11 @@
 import client from 'graphql/client';
+import calcDistance from 'utils/calcDistance';
 
 import { GetStaticProps } from 'next';
-
-import { GET_FLIGHTS } from 'graphql/queries';
 import { GetFlightsQuery } from 'graphql/generated/graphql';
-import { calcDistance } from 'utils/calcDistance';
+import { GET_FLIGHTS } from 'graphql/queries';
+import { useEffect } from 'react';
+import { useRedirect } from 'hooks/redirect';
 
 import Content from 'components/Content';
 import Country from 'components/Country';
@@ -14,10 +15,16 @@ import { MdFlight, MdFlag } from 'react-icons/md';
 import * as S from 'styles/flight-distance';
 
 export default function FasterFlight({ flights }: GetFlightsQuery) {
+  const { redirect } = useRedirect();
+
   const { departureAirport, arrivalAirport, airplane, company, duration } =
     flights.reduce((prev, current) =>
       prev.duration < current.duration ? prev : current
     );
+
+  useEffect(() => {
+    redirect();
+  }, [redirect]);
 
   if (
     !departureAirport ||

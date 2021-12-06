@@ -1,15 +1,18 @@
-import { GetStaticProps } from 'next';
-
 import client from 'graphql/client';
 
-import { GET_FLIGHTS_NUMBER } from 'graphql/queries';
+import { GetStaticProps } from 'next';
 import { GetFlightsNumberQuery } from 'graphql/generated/graphql';
+import { GET_FLIGHTS_NUMBER } from 'graphql/queries';
+import { useEffect } from 'react';
+import { useRedirect } from 'hooks/redirect';
 
 import Content from 'components/Content';
 
 import * as S from 'styles/numbers';
 
 export default function Home({ flights }: GetFlightsNumberQuery) {
+  const { redirect } = useRedirect();
+
   const domesticFlights = flights.filter(
     (flight) =>
       flight.arrivalAirport?.country === flight.departureAirport?.country
@@ -19,6 +22,10 @@ export default function Home({ flights }: GetFlightsNumberQuery) {
     (flight) =>
       flight.arrivalAirport?.country !== flight.departureAirport?.country
   );
+
+  useEffect(() => {
+    redirect();
+  }, [redirect]);
 
   return (
     <Content title="Número de voos">

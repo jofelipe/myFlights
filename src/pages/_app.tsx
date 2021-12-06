@@ -1,6 +1,7 @@
 import Head from 'next/head';
 
 import { AppProps } from 'next/app';
+import { RedirectProvider } from 'hooks/redirect';
 import { colors } from 'constants/colors';
 
 import GlobalStyles from 'styles/global';
@@ -20,7 +21,9 @@ function App({ Component, pageProps }: AppProps) {
 
       <GlobalStyles />
 
-      <Component {...pageProps} />
+      <RedirectProvider>
+        <Component {...pageProps} />
+      </RedirectProvider>
     </>
   );
 }
