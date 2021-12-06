@@ -1,28 +1,25 @@
-import { GetStaticProps } from 'next';
-
 import client from 'graphql/client';
+import calcDistance from 'utils/calcDistance';
 
-import { GET_FLIGHTS_MAP } from 'graphql/queries';
+import { GetStaticProps } from 'next';
 import { GetFlightsMapQuery } from 'graphql/generated/graphql';
+import { GET_FLIGHTS_MAP } from 'graphql/queries';
+import { useEffect } from 'react';
+import { useRedirect } from 'hooks/redirect';
 
 import Content from 'components/Content';
 
 import * as S from 'styles/numbers';
 
 export default function Distance({ flights }: GetFlightsMapQuery) {
-  const pi = 0.017453292519943295;
+  const { redirect } = useRedirect();
+
   const travelAroundEarthDistance = 40.075;
 
   let totalDistance = 0;
 
   const distance = (lat1 = 0, lng1 = 0, lat2 = 0, lng2 = 0) => {
-    const c = Math.cos;
-    const a =
-      0.5 -
-      c((lat2 - lat1) * pi) / 2 +
-      (c(lat1 * pi) * c(lat2 * pi) * (1 - c((lng2 - lng1) * pi))) / 2;
-
-    const distance = 12742 * Math.asin(Math.sqrt(a));
+    const distance = calcDistance(lat1, lng1, lat2, lng2);
 
     totalDistance = totalDistance + distance;
   };
@@ -35,6 +32,10 @@ export default function Distance({ flights }: GetFlightsMapQuery) {
       departureAirport?.location.longitude
     );
   });
+
+  useEffect(() => {
+    redirect();
+  }, [redirect]);
 
   return (
     <Content title="Distância total">
