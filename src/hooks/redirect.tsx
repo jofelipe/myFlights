@@ -23,9 +23,7 @@ export const RedirectProvider: React.FC = ({ children }) => {
   const redirect = () => {
     setTimeout(function () {
       randomRedirect();
-    }, 5000);
-
-    return 'hi';
+    }, 15000);
   };
 
   return (
