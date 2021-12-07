@@ -1,4 +1,4 @@
-# ⛰ myFlights
+# ✈️ myFlights
 
 <p align="center">
   <img width="700" height="575" src="https://user-images.githubusercontent.com/1819244/144944018-b438a01b-76a1-434c-a850-a89d8eff8284.gif">
