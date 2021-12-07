@@ -6,7 +6,7 @@
 
 A personal version of the famous [myFlightRadar24](https://my.flightradar24.com/jofelipe) made with NextJS and GraphQL (with GraphCMS). The application is designed to be displayed in a 10" LCD display (it's not responsive 🙃). There is also a hook to redirect to random pages every 15 seconds, making the application appear as a slideshow . 
 
-### Built using
+### ⚙️ Built using
 
 - [Next.js](https://nextjs.org/)
 - [graphql-request](https://github.com/prisma-labs/graphql-request)
@@ -15,7 +15,12 @@ A personal version of the famous [myFlightRadar24](https://my.flightradar24.com/
 - [GraphCMS](https://graphcms.com/)
 - [Vercel](https://vercel.com)
 
-## ☑ Learn More
+### ✅ To Do
+
+- Change GraphCMS default id field to integer (replacing custom field "unique")
+- Built new pages with charts, similar to myFlightRadar
+
+## ✨ Learn More
 
 To learn more about Next.js, take a look at the following resources:
 
